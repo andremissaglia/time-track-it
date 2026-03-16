@@ -2,6 +2,8 @@
 
 ### The hassle-free, offline time tracker.
 
+**[Live demo →](http://timetrackit.amissaglia.dev.br/)**
+
 ![Time Track It screenshot](src/assets/screenshot.png)
 
 ## Features
