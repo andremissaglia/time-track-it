@@ -22,6 +22,11 @@ export function useTimeEntries() {
     await loadEntries()
   }
 
+  async function deleteProject(projectName) {
+    await db.timeEntries.where('project').equals(projectName).delete()
+    await loadEntries()
+  }
+
   async function clearAll() {
     await db.timeEntries.clear()
     await db.activeTimer.clear()
@@ -52,6 +57,7 @@ export function useTimeEntries() {
     groupedEntries,
     loadEntries,
     deleteEntry,
+    deleteProject,
     updateEntry,
     clearAll,
     exportData,

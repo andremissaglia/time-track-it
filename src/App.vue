@@ -24,7 +24,7 @@
         @edit="openEdit"
         @replay="onReplay"
       />
-      <ProjectSummary :projects="projectData.projects.value" />
+      <ProjectSummary :projects="projectData.projects.value" @delete-project="entryData.deleteProject" />
     </div>
 
     <TimeEntryEditModal
