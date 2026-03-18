@@ -27,6 +27,13 @@ export function useTimeEntries() {
     await loadEntries()
   }
 
+  async function renameProject(oldName, newName) {
+    const trimmed = newName.trim()
+    if (!trimmed || trimmed === oldName) return
+    await db.timeEntries.where('project').equals(oldName).modify({ project: trimmed })
+    await loadEntries()
+  }
+
   async function clearAll() {
     await db.timeEntries.clear()
     await db.activeTimer.clear()
@@ -58,6 +65,7 @@ export function useTimeEntries() {
     loadEntries,
     deleteEntry,
     deleteProject,
+    renameProject,
     updateEntry,
     clearAll,
     exportData,

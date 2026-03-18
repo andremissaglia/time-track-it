@@ -12,6 +12,7 @@
         v-for="entry in group.entries"
         :key="entry.id"
         :entry="entry"
+        :projectColorIndex="projectColorIndex"
         @delete="$emit('delete', $event)"
         @edit="$emit('edit', $event)"
         @replay="$emit('replay', $event)"
@@ -26,6 +27,7 @@ import { formatDayLabel, formatDuration } from '../utils/time.js'
 
 defineProps({
   groupedEntries: { type: Array, default: () => [] },
+  projectColorIndex: { type: Object, default: () => ({}) },
 })
 
 defineEmits(['delete', 'edit', 'replay'])

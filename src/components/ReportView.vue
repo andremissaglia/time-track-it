@@ -30,7 +30,7 @@
           <tbody>
             <tr v-for="project in reportData.projects" :key="project">
               <td class="project-col">
-                <span class="dot" :style="{ background: projectColor(project) }"></span>
+                <span class="dot" :style="{ background: projectColor(projectColorIndex[project]) }"></span>
                 {{ project }}
               </td>
               <td v-for="period in reportData.periods" :key="period" class="period-col">
@@ -73,6 +73,7 @@ Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, L
 
 const props = defineProps({
   entries: { type: Object, required: true },
+  projectColorIndex: { type: Object, default: () => ({}) },
 })
 
 const granularity = ref('days')
@@ -94,7 +95,7 @@ function buildChartData() {
       const ms = matrix[project]?.[p] || 0
       return Math.round((ms / 3600000) * 100) / 100
     }),
-    backgroundColor: projectColor(project),
+    backgroundColor: projectColor(props.projectColorIndex[project]),
   }))
   return { labels: periodLabels, datasets }
 }

@@ -4,7 +4,7 @@
       <span
         v-if="entry.project"
         class="project-tag"
-        :style="{ background: projectColor(entry.project) }"
+        :style="{ background: projectColor(projectColorIndex[entry.project]) }"
       >
         {{ entry.project }}
       </span>
@@ -37,6 +37,7 @@ import { formatDuration, formatTime } from '../utils/time.js'
 
 const props = defineProps({
   entry: Object,
+  projectColorIndex: { type: Object, default: () => ({}) },
 })
 
 const emit = defineEmits(['delete', 'edit', 'replay'])

@@ -9,9 +9,15 @@
       :class="{ selected: selectedProject === p.name }"
       @click.stop="$emit('select-project', p.name)"
     >
-      <span class="color-dot" :style="{ background: projectColor(p.name) }"></span>
+      <span class="color-dot" :style="{ background: projectColor(projectColorIndex[p.name]) }"></span>
       <span class="project-name">{{ p.name }}</span>
       <span class="project-time">{{ formatDurationShort(p.totalMs) }}</span>
+      <button class="edit-btn" @click.stop="$emit('edit-project', p.name)" title="Rename project">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+      </button>
       <button
         class="delete-btn"
         :class="{ confirming: confirmingProject === p.name }"
@@ -33,9 +39,10 @@ import { formatDurationShort } from '../utils/time.js'
 defineProps({
   projects: { type: Array, default: () => [] },
   selectedProject: { type: String, default: null },
+  projectColorIndex: { type: Object, default: () => ({}) },
 })
 
-const emit = defineEmits(['delete-project', 'select-project'])
+const emit = defineEmits(['delete-project', 'select-project', 'edit-project'])
 
 const confirmingProject = ref(null)
 let confirmTimeout = null
@@ -119,6 +126,23 @@ onUnmounted(() => clearTimeout(confirmTimeout))
   font-family: 'SF Mono', 'Fira Code', monospace;
   font-size: 13px;
   color: #888;
+}
+
+.edit-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ccc;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.edit-btn:hover {
+  color: #555;
 }
 
 .delete-btn {

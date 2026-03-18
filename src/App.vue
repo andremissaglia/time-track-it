@@ -26,6 +26,7 @@
       <div class="main-layout">
         <TimeEntryList
           :groupedEntries="filteredGroupedEntries"
+          :projectColorIndex="projectData.projectColorIndex.value"
           @delete="entryData.deleteEntry"
           @edit="openEdit"
           @replay="onReplay"
@@ -33,19 +34,28 @@
         <ProjectSummary
           :projects="projectData.projects.value"
           :selectedProject="selectedProject"
+          :projectColorIndex="projectData.projectColorIndex.value"
           @delete-project="onDeleteProject"
           @select-project="onSelectProject"
+          @edit-project="editingProject = $event"
         />
       </div>
     </template>
 
-    <ReportView v-else :entries="entryData.entries" />
+    <ReportView v-else :entries="entryData.entries" :projectColorIndex="projectData.projectColorIndex.value" />
 
     <TimeEntryEditModal
       v-if="editingEntry"
       :entry="editingEntry"
       @close="editingEntry = null"
       @save="onSaveEdit"
+    />
+
+    <ProjectEditModal
+      v-if="editingProject"
+      :projectName="editingProject"
+      @close="editingProject = null"
+      @save="onRenameProject"
     />
 
     <footer class="footer">
@@ -64,6 +74,7 @@ import { ref, computed, onMounted } from 'vue'
 import TimerBar from './components/TimerBar.vue'
 import TimeEntryList from './components/TimeEntryList.vue'
 import TimeEntryEditModal from './components/TimeEntryEditModal.vue'
+import ProjectEditModal from './components/ProjectEditModal.vue'
 import ProjectSummary from './components/ProjectSummary.vue'
 import ImportExport from './components/ImportExport.vue'
 import ReportView from './components/ReportView.vue'
@@ -76,6 +87,7 @@ const timer = useTimer(() => entryData.loadEntries())
 const projectData = useProjects(entryData.entries)
 
 const editingEntry = ref(null)
+const editingProject = ref(null)
 const activeTab = ref('tracker')
 const selectedProject = ref(null)
 
@@ -134,6 +146,12 @@ async function onSaveEdit({ id, ...changes }) {
 async function onDeleteProject(name) {
   if (selectedProject.value === name) selectedProject.value = null
   await entryData.deleteProject(name)
+}
+
+async function onRenameProject({ oldName, newName }) {
+  if (selectedProject.value === oldName) selectedProject.value = newName
+  await entryData.renameProject(oldName, newName)
+  editingProject.value = null
 }
 
 const { exportData } = entryData
