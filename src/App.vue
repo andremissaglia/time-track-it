@@ -25,12 +25,17 @@
 
       <div class="main-layout">
         <TimeEntryList
-          :groupedEntries="entryData.groupedEntries.value"
+          :groupedEntries="filteredGroupedEntries"
           @delete="entryData.deleteEntry"
           @edit="openEdit"
           @replay="onReplay"
         />
-        <ProjectSummary :projects="projectData.projects.value" @delete-project="entryData.deleteProject" />
+        <ProjectSummary
+          :projects="projectData.projects.value"
+          :selectedProject="selectedProject"
+          @delete-project="onDeleteProject"
+          @select-project="onSelectProject"
+        />
       </div>
     </template>
 
@@ -55,7 +60,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import TimerBar from './components/TimerBar.vue'
 import TimeEntryList from './components/TimeEntryList.vue'
 import TimeEntryEditModal from './components/TimeEntryEditModal.vue'
@@ -72,6 +77,21 @@ const projectData = useProjects(entryData.entries)
 
 const editingEntry = ref(null)
 const activeTab = ref('tracker')
+const selectedProject = ref(null)
+
+const filteredGroupedEntries = computed(() => {
+  if (!selectedProject.value) return entryData.groupedEntries.value
+  return entryData.groupedEntries.value
+    .map(group => ({
+      ...group,
+      entries: group.entries.filter(e => e.project === selectedProject.value),
+    }))
+    .filter(group => group.entries.length > 0)
+})
+
+function onSelectProject(name) {
+  selectedProject.value = selectedProject.value === name ? null : name
+}
 
 onMounted(() => entryData.loadEntries())
 
@@ -109,6 +129,11 @@ async function onReplay(entry) {
 async function onSaveEdit({ id, ...changes }) {
   await entryData.updateEntry(id, changes)
   editingEntry.value = null
+}
+
+async function onDeleteProject(name) {
+  if (selectedProject.value === name) selectedProject.value = null
+  await entryData.deleteProject(name)
 }
 
 const { exportData } = entryData
