@@ -14,6 +14,7 @@
         :entry="entry"
         @delete="$emit('delete', $event)"
         @edit="$emit('edit', $event)"
+        @replay="$emit('replay', $event)"
       />
     </div>
   </div>
@@ -27,7 +28,7 @@ defineProps({
   groupedEntries: { type: Array, default: () => [] },
 })
 
-defineEmits(['delete', 'edit'])
+defineEmits(['delete', 'edit', 'replay'])
 
 function dayTotal(entries) {
   const total = entries.reduce((sum, e) => sum + (e.endTime - e.startTime), 0)

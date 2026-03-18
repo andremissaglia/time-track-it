@@ -22,6 +22,7 @@
         :groupedEntries="entryData.groupedEntries.value"
         @delete="entryData.deleteEntry"
         @edit="openEdit"
+        @replay="onReplay"
       />
       <ProjectSummary :projects="projectData.projects.value" />
     </div>
@@ -83,6 +84,15 @@ function onProjectUpdate(val) {
 
 function openEdit(entry) {
   editingEntry.value = { ...entry }
+}
+
+async function onReplay(entry) {
+  if (timer.isRunning.value) {
+    await timer.stop()
+  }
+  timer.description.value = entry.description || ''
+  timer.project.value = entry.project || ''
+  await timer.start()
 }
 
 async function onSaveEdit({ id, ...changes }) {
