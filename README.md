@@ -4,22 +4,23 @@
 
 **[Get Started!](https://timetrackit.amissaglia.dev.br/)**
 
-![Time Track It screenshot](src/assets/screenshot.png)
+![Time Track It screenshot](src/assets/home.png)
+![Reports screenshot](src/assets/report.png)
 
 ## Features
 
 - **One-click timer** — describe what you're working on and hit Start
 - **Project tagging** — use `#project` inline to tag entries automatically
-- **Project summary** — see total time per project at a glance
-- **Edit & delete entries** — full control over your time log
 - **Import / Export JSON** — back up or move your data anytime
 - **100% offline** — all data stored locally in your browser via IndexedDB, no account needed
+- **Reports** - visualize your time across projects and periods.
 
 ## Tech Stack
 
 - [Vue 3](https://vuejs.org/)
 - [Vite](https://vite.dev/)
 - [Dexie.js](https://dexie.org/) (IndexedDB)
+- [Chart.js](https://www.chartjs.org/) (Reports)
 
 ## Getting Started
 

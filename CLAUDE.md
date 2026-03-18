@@ -20,10 +20,11 @@ npm run preview  # Preview production build
 - Build output goes to `docs/` (GitHub Pages deployment)
 
 ### State Management
-Three composables in `src/composables/` handle all state — no Vuex/Pinia:
+Four composables in `src/composables/` handle all state — no Vuex/Pinia:
 - `useTimer` — active timer lifecycle, persists to `activeTimer` table, ticks every second
 - `useTimeEntries` — CRUD for `timeEntries`, groups by date for display
 - `useProjects` — computed aggregation of time per project, used for autocomplete and summary
+- `useReports` — computes a time matrix (project × period) for the Reports tab; supports `days`/`weeks`/`months` granularity
 
 `App.vue` owns all composable instances and passes data/handlers down to components as props/events.
 
