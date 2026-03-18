@@ -1,7 +1,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
-import { db } from '../db.js'
+import { db as defaultDb } from '../db.js'
 
-export function useTimer(onStop) {
+export function useTimer(onStop, db = defaultDb) {
   const isRunning = ref(false)
   const description = ref('')
   const project = ref('')

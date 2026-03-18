@@ -1,8 +1,8 @@
 import { ref } from 'vue'
-import { db } from '../db.js'
+import { db as defaultDb } from '../db.js'
 import { groupEntriesByDay } from '../utils/time.js'
 
-export function useTimeEntries() {
+export function useTimeEntries(db = defaultDb) {
   const entries = ref([])
   const groupedEntries = ref([])
 
