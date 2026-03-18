@@ -5,27 +5,36 @@
       <ImportExport @export="exportData" @import="onImport" />
     </header>
 
-    <TimerBar
-      :isRunning="timer.isRunning.value"
-      :elapsed="timer.elapsed.value"
-      :modelDescription="timer.description.value"
-      :modelProject="timer.project.value"
-      :filterProjects="projectData.filterProjects"
-      @start="onStart"
-      @stop="onStop"
-      @update:description="onDescUpdate"
-      @update:project="onProjectUpdate"
-    />
+    <nav class="tabs">
+      <button :class="['tab', { active: activeTab === 'tracker' }]" @click="activeTab = 'tracker'">Tracker</button>
+      <button :class="['tab', { active: activeTab === 'reports' }]" @click="activeTab = 'reports'">Reports</button>
+    </nav>
 
-    <div class="main-layout">
-      <TimeEntryList
-        :groupedEntries="entryData.groupedEntries.value"
-        @delete="entryData.deleteEntry"
-        @edit="openEdit"
-        @replay="onReplay"
+    <template v-if="activeTab === 'tracker'">
+      <TimerBar
+        :isRunning="timer.isRunning.value"
+        :elapsed="timer.elapsed.value"
+        :modelDescription="timer.description.value"
+        :modelProject="timer.project.value"
+        :filterProjects="projectData.filterProjects"
+        @start="onStart"
+        @stop="onStop"
+        @update:description="onDescUpdate"
+        @update:project="onProjectUpdate"
       />
-      <ProjectSummary :projects="projectData.projects.value" @delete-project="entryData.deleteProject" />
-    </div>
+
+      <div class="main-layout">
+        <TimeEntryList
+          :groupedEntries="entryData.groupedEntries.value"
+          @delete="entryData.deleteEntry"
+          @edit="openEdit"
+          @replay="onReplay"
+        />
+        <ProjectSummary :projects="projectData.projects.value" @delete-project="entryData.deleteProject" />
+      </div>
+    </template>
+
+    <ReportView v-else :entries="entryData.entries" />
 
     <TimeEntryEditModal
       v-if="editingEntry"
@@ -52,6 +61,7 @@ import TimeEntryList from './components/TimeEntryList.vue'
 import TimeEntryEditModal from './components/TimeEntryEditModal.vue'
 import ProjectSummary from './components/ProjectSummary.vue'
 import ImportExport from './components/ImportExport.vue'
+import ReportView from './components/ReportView.vue'
 import { useTimer } from './composables/useTimer.js'
 import { useTimeEntries } from './composables/useTimeEntries.js'
 import { useProjects } from './composables/useProjects.js'
@@ -61,6 +71,7 @@ const timer = useTimer(() => entryData.loadEntries())
 const projectData = useProjects(entryData.entries)
 
 const editingEntry = ref(null)
+const activeTab = ref('tracker')
 
 onMounted(() => entryData.loadEntries())
 
@@ -173,5 +184,35 @@ async function onImport(jsonStr) {
   height: 24px;
   fill: currentColor;
   display: block;
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #2a2a2a;
+  padding-bottom: 0;
+}
+
+.tab {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.tab:hover {
+  color: #ccc;
+}
+
+.tab.active {
+  color: #e44991;
+  border-bottom-color: #e44991;
 }
 </style>
